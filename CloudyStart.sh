@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Author Joshua Ross
 # Github: https://github.com/ross-jm
-# Purpose: CloudyStart a quick an easy cloudinit vm creation tool.
-######################
+# Purpose: CloudVM Creatin tool.
+# -----------------------------------
 
 # Function for colors.
 print_green() {
