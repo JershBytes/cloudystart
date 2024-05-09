@@ -11,9 +11,9 @@ This was created as I loved the idea of using proxmox templates, But Did not wan
 
 ## Instructions
 
-- Clone the repo.
+- **Clone the repo.**
 ```
-https://github.com/ross-jm/CloudyStart.git
+git clone https://github.com/ross-jm/CloudyStart.git
 ```
 
 
