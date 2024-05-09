@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Author Joshua Ross
 # Purpose: CloudyStart a quick an easy cloudinit vm creation tool.
-# created on 05-02-2024
 ######################
 
 # Function for colors.
