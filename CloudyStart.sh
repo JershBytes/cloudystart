@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Author Joshua Ross
 # Github: https://github.com/ross-jm
-# Purpose: CloudVM Creatin tool.
+# Purpose: CloudVM Creation tool.
 # -----------------------------------
 
 # Function for colors.
