@@ -5,7 +5,7 @@
 3. [Slight Modifications](#slight-modifications)
 
 
-## Purpose
+## Purpose 🤔
 
 This was created as I loved the idea of using proxmox templates, But Did not want to always go to the webUI to clone the template. So I came up with the idea of why not just write a script that lives on the server and all I need to do is ssh in run the script and then boom. We got a vm ready to rock.
 
