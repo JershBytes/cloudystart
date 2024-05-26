@@ -2,7 +2,6 @@
 # Author Joshua Ross
 # Github: https://github.com/ross-jm
 # Purpose: CloudVM Creation tool.
-# -----------------------------------
 
 # Function for colors.
 print_green() {
