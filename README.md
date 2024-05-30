@@ -13,7 +13,7 @@ This was created as I loved the idea of using proxmox templates, But Did not wan
 
 - **Clone the repo.**
 ```
-git clone https://github.com/ross-jm/CloudyStart.git
+git clone https://github.com/ColoredBytes/CloudyStart.git
 ```
 
 
