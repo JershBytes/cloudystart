@@ -1,7 +1,16 @@
 #!/usr/bin/env bash
 # Author Joshua Ross
 # Purpose: CloudyStart a quick and easy cloudinit VM creation tool.
-# Created on 05-02-2024
+# Created on 06-01-2024
+
+# Function for colors.
+print_green() {
+    echo -e "\e[32m$1\e[0m"
+}
+
+print_red() {
+    echo -e "\e[31m$1\e[0m"
+}
 
 
 # Function to calculate gateway based on CIDR notation
