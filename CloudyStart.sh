@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Author Joshua Ross
-# Github: https://github.com/ross-jm
-# Purpose: CloudVM Creation tool.
+# Purpose: CloudyStart a quick an easy cloudinit vm creation tool.
+# created on 05-02-2024
+######################
 
 # Function for colors.
 print_green() {
@@ -39,9 +40,10 @@ sleep 1
 
 
 # Set up Location Variables
+TMP=$(mktemp -d)
 LOG_FILE="/var/log/CloudyStart.txt"
-IMAGE_DIR="" # Set to where you want the images to temporarily be downloaded. 
-VM_STO="" # Set to the storage used for VMs
+IMAGE_DIR="$TMP" # Set to where you want the images to temporarily be downloaded. 
+VM_STO="SR-ZFS" # Set to the storage used for VMs
 
 # Commands
 exec > >(tee -a ${LOG_FILE})
@@ -86,6 +88,8 @@ IMAGE_URLS[2]="https://repo.almalinux.org/almalinux/9/cloud/x86_64/images/AlmaLi
 IMAGE_URLS[3]="https://download.fedoraproject.org/pub/fedora/linux/releases/40/Cloud/x86_64/images/Fedora-Cloud-Base-Generic.x86_64-40-1.14.qcow2"
 IMAGE_URLS[4]="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
 IMAGE_URLS[5]="https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+IMAGE_URLS[6]="https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64-disk-kvm.img"
+
 
 
 # Function to download the image for the selected distribution
@@ -94,11 +98,6 @@ download_distribution_image() {
     wget -q --show-progress -O "$IMAGE_DIR/${DISTRIBUTION}.img" "$IMAGE_URL" || { print_red "Failed to download $DISTRIBUTION image from $IMAGE_URL"; exit 1; }
 }
 
-# Check if the image directory exists, if not, create it
-if [ ! -d "$IMAGE_DIR" ]; then
-    mkdir -p "$IMAGE_DIR" || { print_red "Failed to create image directory $IMAGE_DIR"; exit 1; }
-fi
-
 # Display distribution options
 print_teal "Select distribution:"
 print_teal "1. Rocky 9"
@@ -106,6 +105,7 @@ print_teal "2. Alma 9 "
 print_teal "3. Fedora 40"
 print_teal "4. Debian 12"
 print_teal "5. Ubuntu 24.04"
+print_teal "6. Ubuntu 22.04" 
 
 # Read user's choice
 print_teal "Enter the number of the distribution you want to select: "
@@ -121,11 +121,12 @@ fi
 DISTRIBUTION=""
 IMAGE_URL=""
 case $CHOICE in
-    1) DISTRIBUTION="rocky";;
-    2) DISTRIBUTION="alma";;
-    3) DISTRIBUTION="fedora";;
-    4) DISTRIBUTION="debian";;
-    5) DISTRIBUTION="ubuntu";;
+    1) DISTRIBUTION="rocky 9.3";;
+    2) DISTRIBUTION="alma 9.3";;
+    3) DISTRIBUTION="fedora 40";;
+    4) DISTRIBUTION="debian 12";;
+    5) DISTRIBUTION="ubuntu 24.04";;
+    6) DISTRIBUTION="ubuntu 22.04";;
     *) print_red "Invalid choice"; exit 1;;
 esac
 
@@ -154,7 +155,7 @@ trap 'handle_error' ERR EXIT
 
 # Create a new virtual machine
 print_green "Creating a new virtual machine..."
-qm create $VM_ID --memory $MEMORY --cores $CORES --name $VM_NAME --net0 virtio,bridge=vmbr1,tag=$VLAN --scsihw virtio-scsi-pci --machine q35 --cpu host  || { print_red "Failed to create VM."; exit 1; }
+qm create $VM_ID --memory $MEMORY --cores $CORES --name $VM_NAME --net0 virtio,bridge=vmbr0,tag=$VLAN --scsihw virtio-scsi-pci --machine q35 --cpu host  || { print_red "Failed to create VM."; exit 1; }
 
 # Set disk parameters and import from the base image
 print_green "Setting disk parameters and importing from the base image..."
@@ -173,7 +174,6 @@ print_green "Adding cloud-init drive with configuration..."
 qm set $VM_ID --ide2 $VM_STO:cloudinit,media=cdrom  || { print_red "Failed to add cloud-init drive."; exit 1; }
 qm set $VM_ID --ipconfig0 ip=$IP/$CIDR,gw=$GATEWAY
 
-
 # Make the cloud-init drive bootable and restrict BIOS to boot from disk only
 print_green "Configuring boot options..."
 qm set $VM_ID --boot c --bootdisk scsi0 || { print_red "Failed to configure boot options."; exit 1; }
@@ -187,5 +187,5 @@ trap - ERR EXIT
 
 # Yay You win! Time to cleanup.
 print_green "Setup completed successfully, cleaning log and removing image..."
-rm "$IMAGE_DIR/${DISTRIBUTION}.img"
+rm -rf "$IMAGE_DIR"
 > log.txt
