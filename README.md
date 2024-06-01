@@ -44,6 +44,10 @@ For this script, two variables need to be changed on your end.
  VM_STO="" # Set to the storage used for VMs
  CIDR="23 # Should be changed to whatever the CIDR notation is used on your end. 
 ```
+I've added a secondary verison of this script using [`whiptail`](CloudyStart-whiptail.sh).
+
+- This is a more interactive version if that's something you like.
+    -  Same Changes are required as stated in the notes as well!
 
 ## :balance_scale: **LICENSE**
 

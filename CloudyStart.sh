@@ -43,7 +43,7 @@ sleep 1
 TMP=$(mktemp -d)
 LOG_FILE="/var/log/CloudyStart.txt"
 IMAGE_DIR="$TMP" # Set to where you want the images to temporarily be downloaded. 
-VM_STO="SR-ZFS" # Set to the storage used for VMs
+VM_STO="" # Set to the storage used for VMs
 
 # Commands
 exec > >(tee -a ${LOG_FILE})
@@ -64,7 +64,7 @@ print_teal "Enter vLAN"
 read -r VLAN
 print_teal "Enter the IP:"
 read -r IP
-CIDR="23"
+CIDR=""
 
 # Calculate gateway
 GATEWAY=$(calculate_gateway "$IP" "$CIDR")
