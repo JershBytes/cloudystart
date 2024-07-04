@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Author Joshua Ross
-# Purpose: CloudyStart a quick an easy cloudinit vm creation tool.
-# created on 05-02-2024
-######################
+# Purpose: CloudyStart a quick and easy cloudinit VM creation tool.
+# Created on 06-01-2024
 
 # Function for colors.
 print_green() {
@@ -13,9 +12,6 @@ print_red() {
     echo -e "\e[31m$1\e[0m"
 }
 
-print_teal() {
-    echo -e "\e[36m$1\e[0m"
-}
 
 # Function to calculate gateway based on CIDR notation
 calculate_gateway() {
@@ -25,19 +21,6 @@ calculate_gateway() {
     gateway=$(echo "$ip" | awk -F'.' '{print $1"."$2"."$3".1"}')
     echo "$gateway"
 }
-
-# ASCII art for the title
-print_green "
- _________________ 
-|  _____________  |
-| | CloudyStart | |
-| |_____________| |
-|_________________|
-"
-
-# Quick nap before the fun starts
-sleep 1
-
 
 # Set up Location Variables
 TMP=$(mktemp -d)
@@ -49,35 +32,49 @@ VM_STO="" # Set to the storage used for VMs
 exec > >(tee -a ${LOG_FILE})
 exec 2> >(tee -a ${LOG_FILE} >&2)
 
-# Read parameters interactively
-print_teal "Enter VM ID:" 
-read -r VM_ID
-print_teal "Enter VM Name:" 
-read -r VM_NAME
-print_teal "Enter # of Sockets:"
-read -r SOCKETS
-print_teal "Enter # of Cores:" 
-read -r CORES
-print_teal "Enter Memory (MB):" 
-read -r MEMORY
-print_teal "Enter vLAN"
-read -r VLAN
-print_teal "Enter the IP:"
-read -r IP
+# Function to handle exit on cancel or escape
+handle_cancel() {
+    local exit_status=$?
+    if [ $exit_status -ne 0 ]; then
+        print_red "User cancelled. Exiting..."
+        exit 1
+    fi
+}
+
+# Read parameters interactively using whiptail
+VM_ID=$(whiptail --inputbox "Enter VM ID:" 8 39 --title "CloudyStart" 3>&1 1>&2 2>&3)
+handle_cancel
+
+VM_NAME=$(whiptail --inputbox "Enter VM Name:" 8 39 --title "CloudyStart" 3>&1 1>&2 2>&3)
+handle_cancel
+
+SOCKETS=$(whiptail --inputbox "Enter # of Sockets:" 8 39 --title "CloudyStart" 3>&1 1>&2 2>&3)
+handle_cancel
+
+CORES=$(whiptail --inputbox "Enter # of Cores:" 8 39 --title "CloudyStart" 3>&1 1>&2 2>&3)
+handle_cancel
+
+MEMORY=$(whiptail --inputbox "Enter Memory (MB):" 8 39 --title "CloudyStart" 3>&1 1>&2 2>&3)
+handle_cancel
+
+VLAN=$(whiptail --inputbox "Enter vLAN:" 8 39 --title "CloudyStart" 3>&1 1>&2 2>&3)
+handle_cancel
+
+IP=$(whiptail --inputbox "Enter the IP:" 8 39 --title "CloudyStart" 3>&1 1>&2 2>&3)
+handle_cancel
+
 CIDR=""
 
 # Calculate gateway
 GATEWAY=$(calculate_gateway "$IP" "$CIDR")
 
 # Prompt user for the desired disk size in GB
-print_teal "Enter the desired disk size in GB:" 
-read -r TOTAL_DISK_SIZE_GB
-
-sleep 1
+TOTAL_DISK_SIZE_GB=$(whiptail --inputbox "Enter the desired disk size in GB:" 8 39 --title "CloudyStart" 3>&1 1>&2 2>&3)
+handle_cancel
 
 # Validate input
 if ! [[ "$TOTAL_DISK_SIZE_GB" =~ ^[0-9]+$ ]]; then
-    print_red "Error: Invalid input. Please enter a valid integer."
+    whiptail --msgbox "Error: Invalid input. Please enter a valid integer." 8 39 --title "CloudyStart"
     exit 1
 fi
 
@@ -86,11 +83,10 @@ declare -A IMAGE_URLS
 IMAGE_URLS[1]="https://dl.rockylinux.org/pub/rocky/9/images/x86_64/Rocky-9-GenericCloud.latest.x86_64.qcow2"
 IMAGE_URLS[2]="https://repo.almalinux.org/almalinux/9/cloud/x86_64/images/AlmaLinux-9-GenericCloud-latest.x86_64.qcow2"
 IMAGE_URLS[3]="https://download.fedoraproject.org/pub/fedora/linux/releases/40/Cloud/x86_64/images/Fedora-Cloud-Base-Generic.x86_64-40-1.14.qcow2"
-IMAGE_URLS[4]="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
-IMAGE_URLS[5]="https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
-IMAGE_URLS[6]="https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64-disk-kvm.img"
-
-
+IMAGE_URLS[4]="https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-GenericCloud-9-20240610.0.x86_64.qcow2"
+IMAGE_URLS[5]="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
+IMAGE_URLS[6]="https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+IMAGE_URLS[7]="https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64-disk-kvm.img"
 
 # Function to download the image for the selected distribution
 download_distribution_image() {
@@ -99,21 +95,19 @@ download_distribution_image() {
 }
 
 # Display distribution options
-print_teal "Select distribution:"
-print_teal "1. Rocky 9"
-print_teal "2. Alma 9 "
-print_teal "3. Fedora 40"
-print_teal "4. Debian 12"
-print_teal "5. Ubuntu 24.04"
-print_teal "6. Ubuntu 22.04" 
-
-# Read user's choice
-print_teal "Enter the number of the distribution you want to select: "
-read -r CHOICE
+CHOICE=$(whiptail --title "CloudyStart" --menu "Select distribution:" 16 78 10 \
+"1" "Rocky 9" \
+"2" "Alma 9" \
+"3" "Fedora 40" \
+"4" "CentOS-Stream 9" \
+"5" "Debian 12" \
+"6" "Ubuntu 24.04" \
+"7" "Ubuntu 22.04" 3>&1 1>&2 2>&3)
+handle_cancel
 
 # Check if the choice is valid
 if [[ ! "${IMAGE_URLS[$CHOICE]+isset}" ]]; then
-    print_red "Invalid choice. Exiting."
+    whiptail --msgbox "Invalid choice. Exiting." 8 39 --title "CloudyStart"
     exit 1
 fi
 
@@ -124,10 +118,11 @@ case $CHOICE in
     1) DISTRIBUTION="rocky 9.3";;
     2) DISTRIBUTION="alma 9.3";;
     3) DISTRIBUTION="fedora 40";;
-    4) DISTRIBUTION="debian 12";;
-    5) DISTRIBUTION="ubuntu 24.04";;
-    6) DISTRIBUTION="ubuntu 22.04";;
-    *) print_red "Invalid choice"; exit 1;;
+    4) DISTRIBUTION="centos stream";;
+    5) DISTRIBUTION="debian 12";;
+    6) DISTRIBUTION="ubuntu 24.04";;
+    7) DISTRIBUTION="ubuntu 22.04";;
+    *) whiptail --msgbox "Invalid choice" 8 39 --title "CloudyStart"; exit 1;;
 esac
 
 # Retrieve the corresponding IMAGE_URL from the IMAGE_URLS array
@@ -189,3 +184,4 @@ trap - ERR EXIT
 print_green "Setup completed successfully, cleaning log and removing image..."
 rm -rf "$IMAGE_DIR"
 > log.txt
+

@@ -33,24 +33,25 @@ git clone https://github.com/ColoredBytes/CloudyStart.git
  ```bash
 ./CloudyStart/CloudyStart.sh
 ```
-or
-```bash
-./CloudyStart/CloudyStart-whiptail.sh
-```
+
 
 ## :memo: Notes
 
-I've added a secondary verison of this script using [`whiptail`](CloudyStart-whiptail.sh).
+> [!CAUTION]
+> For this script to run properly, two variables need to be changed on your end.<br>
+> -  **Change these before running the script.**
 
-- This is a more interactive version if that's something you like.
-    -  Same Changes are required as stated in the notes as well!
-
-
-> [!NOTE]
-> For this script, two variables need to be changed on your end.<br>
 ```
  VM_STO="" # Set to the storage used for VMs
- CIDR="23 # Should be changed to whatever the CIDR notation is used on your end. 
+ CIDR="23 # Change to your CIDR notation.
 ```
-> [!WARNING]
-> **Change these before running the script.**
+
+
+
+> [!TIP]
+> If you'd like the script and out of mine,but also make it easier to run. You can follow the steps as a fun little trick.
+
+```bash
+sudo mv CloudyStart /opt/
+ln -s /opt/CloudyStart/CloudyStart.sh /usr/local/bin/CloudyStart
+```
