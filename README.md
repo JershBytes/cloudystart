@@ -24,19 +24,18 @@ I've used Proxmox for years and when I came back last year I found out about Clo
 ## :gear: Instructions
 
 - **Clone the repo.**
-```
+
+```bash
 git clone https://github.com/ColoredBytes/CloudyStart.git
 ```
-
-
-- **Make the script executable.**
- ```
- chmod +x CloudyStart/CloudyStart.sh
- ```
-
 - **Run the script.**
- ```
- ./CloudyStart/CloudyStart.sh
+ 
+ ```bash
+./CloudyStart/CloudyStart.sh
+```
+or
+```bash
+./CloudyStart/CloudyStart-whiptail.sh
 ```
 
 ## :memo: Notes
