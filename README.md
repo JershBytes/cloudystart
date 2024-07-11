@@ -26,16 +26,8 @@ I've used Proxmox for years and when I came back last year I found out about Clo
 - **Clone the repo.**
 
 ```bash
-git clone https://github.com/ColoredBytes/CloudyStart.git
+git clone https://github.com/ColoredBytes/cloudystart.git
 ```
-- **Run the script.**
- 
- ```bash
-./CloudyStart/CloudyStart.sh
-```
-
-
-## :memo: Notes
 
 > [!CAUTION]
 > For this script to run properly, two variables need to be changed on your end.<br>
@@ -46,12 +38,18 @@ git clone https://github.com/ColoredBytes/CloudyStart.git
  CIDR="23 # Change to your CIDR notation.
 ```
 
+- **Run the script.**
+ 
+ ```bash
+./CloudyStart/CloudyStart.sh
+```
 
 
+## :memo: Notes
 > [!TIP]
-> If you'd like the script and out of mine,but also make it easier to run. You can follow the steps as a fun little trick.
+> If you like the script and dont want to run it the from the the dir all the time. You can follow the steps as a fun little trick.
 
 ```bash
-sudo mv CloudyStart /opt/
-ln -s /opt/CloudyStart/CloudyStart.sh /usr/local/bin/CloudyStart
+git clone https://github.com/ColoredBytes/cloudystart.git /opt/cloudystart
+ln -s /opt/cloudystart/cloudystart.sh /usr/local/bin/cloudystart
 ```
