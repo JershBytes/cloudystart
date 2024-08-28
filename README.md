@@ -1,9 +1,18 @@
 <p align="center">
-  <img src="./assets/github-header-image.png" alt="Header">
-  <a href="https://opensource.org/licenses/MIT">
-    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
-  </a>
+  <a href="" rel="noopener">
+ <img  src="./assets/github-header-image.png" alt="Project logo"></a>
 </p>
+
+<h3 align="center">Cloudy Start</h3>
+
+<div align="center">
+
+  [![Status](https://img.shields.io/badge/status-active-success.svg)]() 
+  [![GitHub Issues](https://img.shields.io/github/issues/coloredbytes/cloudystart.svg)](https://github.com/coloredbytes/cloudystart/issues)
+  [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/coloredbytes/cloudystart.svg)](https://github.com/coloredbytes/cloudystart/pulls)
+  [![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
+
+</div>
 
 # :link: Table of Contents
 
