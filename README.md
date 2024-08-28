@@ -50,7 +50,7 @@ git clone https://github.com/ColoredBytes/cloudystart.git
 - **Run the script.**
  
  ```bash
-./CloudyStart/CloudyStart.sh
+./cloudystart/cloudystart.sh
 ```
 
 
