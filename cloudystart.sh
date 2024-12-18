@@ -25,7 +25,7 @@ calculate_gateway() {
 # Set up Location Variables
 TMP=$(mktemp -d)
 LOG_FILE="/var/log/CloudyStart.txt"
-IMAGE_DIR="$TMP" # Set to where you want the images to temporarily be downloaded. 
+IMAGE_DIR="$TMP" # Set to where you want the images to temporarily be downloaded.
 VM_STO="" # Set to the storage used for VMs
 
 # Commands
@@ -150,7 +150,7 @@ trap 'handle_error' ERR EXIT
 
 # Create a new virtual machine
 print_green "Creating a new virtual machine..."
-qm create $VM_ID --memory $MEMORY --cores $CORES --name $VM_NAME --net0 virtio,bridge=vmbr0,tag=$VLAN --scsihw virtio-scsi-pci --machine q35 --cpu host  || { print_red "Failed to create VM."; exit 1; }
+qm create $VM_ID --memory $MEMORY --cores $CORES --sockets $SOCKETS --name $VM_NAME --net0 virtio,bridge=vmbr0,tag=$VLAN --scsihw virtio-scsi-pci --machine q35 --cpu host  || { print_red "Failed to create VM."; exit 1; }
 
 # Set disk parameters and import from the base image
 print_green "Setting disk parameters and importing from the base image..."
@@ -176,6 +176,10 @@ qm set $VM_ID --boot c --bootdisk scsi0 || { print_red "Failed to configure boot
 # Enabling QEMU Guest Agent
 print_green "Enabling QEMU Guest Agent..."
 qm set $VM_ID  --agent enabled=1 || { print_red "Failed to add QEMU Guest Agent."; exit 1; }
+
+# Enable VM To start on boot
+print_green "Setting the VM to start on boot"
+qm set $VM_ID --onboot 1
 
 # Disable trap for successful execution
 trap - ERR EXIT
